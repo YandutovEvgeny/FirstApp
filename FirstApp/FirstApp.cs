@@ -16,6 +16,8 @@
 //#define MULTIPLE_ARRAY
 //#define FUNCTIONS_METHODS
 //#define FUNCTION_OVERLOADING
+//#define VALUETYPES_REFERENCETYPES
+//#define NULL_NULLUNIT
 
 
 using System;
@@ -635,11 +637,16 @@ namespace FirstApp      //Пространство имён System
             double result2 = Addition(2.4, 5.8);
             Console.WriteLine(result2);
 #endif
-            //Stack - небольшой объём оперативной памяти, который выделяется для потока.
-            //Дефолтное значение 1 Мб.
+#if VALUETYPES_REFERENCETYPES
+            //Stack - небольшой объём оперативной памяти, который выделяется для каждого потока.
+            //Дефолтное значение 1 Мб. Используется для хранения переменных, которые мы создаём, используется для выполнения операций
+            //над этими переменными, а также используется для вызова методов.
+
             //Heap - что-то вроде "склада" в оперативной памяти, который мы можем использовать по мере надобности.
             //Объём кучи зависит от платформы на которой запускается наша программа и от ОС, например, если у нас 32х
             //разрядный процесс, то мы можем выделить для кучи около 1.5 Гб памяти, а если 64х разрядный процесс, то до 8 Тб памяти.
+
+            //Stack и Heap - это оперативная память, грубо говоря stack, это мало, но быстро, а heap, это много, но медленно.
 
             //Value type(значимый тип) размещается в стеке, Reference type(ссылочный тип) размещается в куче.
             //Все типы данных, которые являются структурами(struct) или перечислениями(enum) - это значимые типы, соответственно они размещаются в стеке,
@@ -649,7 +656,37 @@ namespace FirstApp      //Пространство имён System
             //System.Int32 b = 5;
 
             //Random random = new Random(); <- Random - это класс, соответственно данные размещены в куче
-            
+
+            //int[] arr = new int[10]; //<- int[] - это структура, однако т.к. это наследник класса Array, данные размещены в куче  
+#endif
+#if NULL_NULLUNIT
+            //null - ссылка на 0, аналог nullptr в С++
+            /*int[] a;
+            a = new int[10];
+            a = null;*/   //<-Garbidge collector весь в работе
+
+            //Оператор null-объединения ??
+            //string str = null;
+
+            /*if(str == null)
+                Console.WriteLine("нет данных");
+            else
+                Console.WriteLine(str);*/
+            //Console.WriteLine(str ?? "Нет данных"); //Если str == null, выводится дефолтное значение - "Нет данных",
+            //если str != null, выводится str
+            /*string result = str ?? string.Empty;    //В результат либо str, либо Empty, если null
+            Console.WriteLine("Количество символов с строке " + result.Length);*/
+
+            //Оператор присваивания объединения со значением Null ??=
+            /*string str = null;
+            str ??= "default string";
+            Console.WriteLine("количество символов в строке: " + str.Length);*/
+
+            /*int[] array = null;
+            array ??= new int[0];
+            Console.WriteLine("количество элементов в массиве " + array.Length);*/ 
+#endif
+
         }
         
     }
