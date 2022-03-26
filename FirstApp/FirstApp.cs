@@ -16,8 +16,9 @@
 //#define MULTIPLE_ARRAY
 //#define FUNCTIONS_METHODS
 //#define FUNCTION_OVERLOADING
-//#define VALUETYPES_REFERENCETYPES
+//#define VALUETYPES_REFERENCETYPE
 //#define NULL_NULLUNIT
+#define KEYWORD_REF
 
 
 using System;
@@ -674,21 +675,72 @@ namespace FirstApp      //Пространство имён System
                 Console.WriteLine(str);*/
             //Console.WriteLine(str ?? "Нет данных"); //Если str == null, выводится дефолтное значение - "Нет данных",
             //если str != null, выводится str
-            /*string result = str ?? string.Empty;    //В результат либо str, либо Empty, если null
+            /*string result = str ?? string.Empty;    //В результат либо str, либо string.Empty, если null
             Console.WriteLine("Количество символов с строке " + result.Length);*/
+            //Далее пример в Null_unitWF
 
             //Оператор присваивания объединения со значением Null ??=
             /*string str = null;
+            //Если str == null переменной str присваивается строка "default string"
             str ??= "default string";
             Console.WriteLine("количество символов в строке: " + str.Length);*/
 
             /*int[] array = null;
             array ??= new int[0];
-            Console.WriteLine("количество элементов в массиве " + array.Length);*/ 
+            Console.WriteLine("количество элементов в массиве " + array.Length);*/
+
+            //Оператор условного null ?.
+            //Можно проверять массив на null таким образом, однако зачем, когда есть ?.
+            /*int[] array = null;
+            string result = array == null ? "Ошибка" : (array.Sum()).ToString();
+            Console.WriteLine("Сумма элементов массива " + result);*/
+
+            //Оператор условного нуля проверяет равен ли массив null, если да, то array.Sum() не
+            //выполняется, если array != null, то выполняется array.Sum()
+            //int[] array = null;
+            //Можно ?. комбинировать с ??, если мы хотим видеть дефолтное значение при array = null
+            //Console.WriteLine("Сумма элементов массива " + (array?.Sum() ?? 0));
+            //Далее пример в Null_unitWF
+#endif
+#if KEYWORD_REF
+            //Ключевое слово ref
+            //Передача аргументов по ссылке
+            /*int a = 2;
+            Foo(ref a);
+            Console.WriteLine(a);*/
+
+            /*int[] array = { 1, 4, 14, 2 };
+            Bar(array);
+            for (int i = 0; i < array.Length; i++)
+            {
+                Console.Write(array[i] + " ");
+            }
+            Console.WriteLine();*/
+
+            int[] arr = { 2, 6, 1 };
+            //ref int b - ссылочная локальная переменная
+            //ref int b = ref arr[0];
+            ref int b = ref Func(arr);
+            //как только мы в b поместили -5, то в нулевом элементе массива тоже будет -5,
+            //т.к. это ссылочная локальная переменная
+            b = -5;
 #endif
 
+
         }
-        
+        static void Foo(ref int a)
+        {
+            a = -5;
+        }
+        static void Bar(int[] arr)
+        {
+            arr[0] = 15;
+            arr[3] = 30;
+        }
+        static ref int Func(int[] arr)
+        {
+            return ref arr[0];
+        }
     }
     
 }

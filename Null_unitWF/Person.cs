@@ -10,6 +10,8 @@ namespace Null_unitWF
         public string MiddleName { get; set; }
         public string SecondName { get; set; }
 
+        public Contacts Contacts { get; set; }
+
         public string GetFullName()
         {
             //Или так:
@@ -19,6 +21,10 @@ namespace Null_unitWF
                 return $"Фамилия: {SecondName} | Имя: {FirstName} | Отчество: Нет данных";
             else
                 return $"Фамилия: {SecondName} | Имя: {FirstName} | Отчество: {MiddleName}";*/
+        }
+        public string GetPhoneNumber()
+        {
+            return $"Номер телефона: {Contacts?.PhoneNumber ?? "Нет данных"}";
         }
         
 }

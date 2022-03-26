@@ -6,6 +6,7 @@
 //#define FOURTH_HW
 //#define FIFTH_HW
 //#define SIXTH_HW
+#define SEVENTH_HW
 using System;
 
 namespace HomeWorks
@@ -20,7 +21,7 @@ namespace HomeWorks
             }
             Console.WriteLine();
         }
-
+        //6HW
         static int IndexOf(int[] array, int element)
         {
             for (int i = 0; i < array.Length; i++)
@@ -29,7 +30,7 @@ namespace HomeWorks
             }
             return -1;
         }
-
+        //6HW
         static int[] GetRandomArray(uint Length, int minValue, int maxValue)
         {
             int[] myArray = new int[Length];
@@ -40,6 +41,7 @@ namespace HomeWorks
             }
             return myArray;
         }
+
         static void Main(string[] args)
         {
 #if FIRST_HW
@@ -271,9 +273,9 @@ namespace HomeWorks
 #endif
 #if FIFTH_HW
             /*TODO: 1) Заполнить массив с клавиатуры
-                        2) Вывести массив в обратном порядке
-                        3) Найти сумму чётных чисел в массиве
-                        4) Найти наименьшее число в массиве*/
+                    2) Вывести массив в обратном порядке
+                    3) Найти сумму чётных чисел в массиве
+                    4) Найти наименьшее число в массиве*/
 
             Console.Write("Введите количество элементов: ");
             int size = int.Parse(Console.ReadLine()); Console.WriteLine();
@@ -340,8 +342,157 @@ namespace HomeWorks
             int[] myArray = GetRandomArray(10, -20, 10);
             Console.WriteLine( IndexOf(myArray, element) ); 
 #endif
+#if SEVENTH_HW
+            /*TODO: DONE 1)Написать метод Resize изменяющий кол-во элементов массива
+                    DONE 2)Написать методы для добавления элемента в начало массива, в конец и по указанному индексу
+                    DONE 3)Написать методы для удаления элемента с начала массива, с конца и по указанному индексу*/
 
+            int[] array = new int[10];
+            Random random = new Random();
+            for (int i = 0; i < array.Length; i++)
+            {
+                array[i] = random.Next(100);
+            }
+            for (int i = 0; i < array.Length; i++)
+            {
+                Console.Write(array[i] + "\t");
+            }
+            Console.WriteLine();
+
+            /*int numberOfElements = 0;
+            try
+            {
+                Console.WriteLine("Введите положительное число на которое хотите увеличить массив: ");
+                numberOfElements = int.Parse(Console.ReadLine());
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Ошибка! Введите положительное число!");
+                return;
+            }
+            array = Resize(array, ref numberOfElements);
+
+            for (int i = array.Length - numberOfElements; i < array.Length; i++)
+            {
+                array[i] = random.Next(100);
+            }
+            for (int i = 0; i < array.Length; i++)
+            {
+                Console.Write(array[i] + "\t");
+            }
+            Console.WriteLine();*/
+            int addElement = 0;
+            int insertIndex = 0;
+            Console.WriteLine("Введите элемент, который хотите добавить: ");
+            addElement = int.Parse(Console.ReadLine());
+            
+            array = push_front(array, ref addElement); //[11]
+            ShowArray(array);
+            
+            array = push_back(array, ref addElement);  //[12]
+            ShowArray(array);
+            
+            Console.WriteLine("Введите индекс, куда хотите вставить элемент: ");
+            insertIndex = int.Parse(Console.ReadLine());
+            array = insert(array, ref addElement, ref insertIndex);    //[13]
+            ShowArray(array);
+            
+            Console.WriteLine("Удаление с начала:");
+            array = pop_front(array);
+            ShowArray(array);
+
+            Console.WriteLine("Удаление с конца: ");
+            array = pop_back(array);
+            ShowArray(array);
+
+            Console.WriteLine("Введите индекс, который хотите удалить: ");
+            int eraseIndex = int.Parse(Console.ReadLine());
+            array = erase(array, ref eraseIndex);
+            ShowArray(array);
+#endif
         }
-        
+        static void ShowArray(int[]array)
+        {
+            for (int i = 0; i < array.Length; i++)
+            {
+                Console.Write(array[i] + "\t");
+            }
+            Console.WriteLine();
+        }
+        static int[] Resize(int[] array, ref int numberOfElements)
+        {
+            int count = array.Length + numberOfElements;
+            int[] resizedArray = new int[count];
+            for (int i = 0; i < array.Length; i++)
+            {
+                resizedArray[i] = array[i];
+            }
+            return resizedArray;
+        }
+        static int[] push_front(int[] array, ref int addElement)
+        {
+            int[] newArray = new int[array.Length + 1];
+            for (int i = 0; i < newArray.Length - 1; i++)
+            {
+                newArray[i+1] = array[i];
+            }
+            newArray[0] = addElement;
+            return newArray;
+        }
+        static int[] push_back(int[]array, ref int addElement)
+        {
+            int[] newArray = new int[array.Length + 1];
+            for (int i = 0; i < newArray.Length - 1; i++)
+            {
+                newArray[i] = array[i];
+            }
+            newArray[newArray.Length-1] = addElement;
+            return newArray;
+        }
+        static int[] insert(int[]array, ref int addElement, ref int insertIndex)
+        {
+            int[] newArray = new int[array.Length + 1];
+            for (int i = 0; i < insertIndex; i++)
+            {
+                newArray[i] = array[i];
+            }
+            for (int i = insertIndex + 1; i < newArray.Length; i++)
+            {
+                newArray[i] = array[i-1];
+            }
+            newArray[insertIndex] = addElement;
+            return newArray;
+        }
+        static int[] pop_front(int[]array)
+        {
+            int[] newArray = new int[array.Length - 1];
+            for (int i = 0; i < newArray.Length; i++)
+            {
+                newArray[i] = array[i+1];
+            }
+            return newArray;
+        }
+        static int[] pop_back(int[]array)
+        {
+            int[] newArray = new int[array.Length - 1];
+            for (int i = 0; i < newArray.Length; i++)
+            {
+                newArray[i] = array[i];
+            }
+            return newArray;
+        }
+        static int[] erase(int[]array, ref int eraseIndex)
+        {
+            int[] newArray = new int[array.Length - 1];
+            for (int i = 0; i < eraseIndex; i++)
+            {
+                newArray[i] = array[i];
+            }
+            for (int i = eraseIndex + 1; i < newArray.Length + 1; i++)
+            {
+                newArray[i-1] = array[i];
+            }
+            return newArray;
+        }
     }
 }

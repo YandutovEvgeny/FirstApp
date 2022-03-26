@@ -42,7 +42,7 @@ namespace Null_unitWF
             {
                 new Person(){FirstName = "Игорь", SecondName = "Никандров", MiddleName = "Анатольевич"},
                 new Person(){FirstName = "Костя", SecondName = "Барабанов"},
-                new Person(){FirstName = "unknown"}
+                new Person(){FirstName = "unknown", Contacts = new Contacts(){ PhoneNumber = "89193756329"} }
             };
         }
 
@@ -54,7 +54,7 @@ namespace Null_unitWF
                  listBox1.Items.Add(person.GetNullName());*/
             foreach (var person in persons)
             {
-                listBox1.Items.Add(person.GetFullName());
+                listBox1.Items.Add($"{person.GetFullName()} | {person.GetPhoneNumber()}");
             }
             
         }
