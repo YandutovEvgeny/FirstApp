@@ -18,7 +18,7 @@
 //#define FUNCTION_OVERLOADING
 //#define VALUETYPES_REFERENCETYPE
 //#define NULL_NULLUNIT
-#define KEYWORDS_REF_OUT_IN_PARAMS
+//#define KEYWORDS_REF_OUT_IN_PARAMS
 
 
 using System;
@@ -57,6 +57,55 @@ namespace FirstApp      //Пространство имён System
         static void PrintResult(int result)
         {
             Console.WriteLine("Результат сложения: " + result);
+        }
+        //ref
+        static void Foo(ref int a)
+        {
+            a = -5;
+        }
+        static void Bar(int[] arr)
+        {
+            arr[0] = 15;
+            arr[3] = 30;
+        }
+        static ref int Func(int[] arr)
+        {
+            return ref arr[0];
+        }
+        //out
+        static void Foo1(ref int value)
+        {
+            Console.WriteLine(value);
+        }
+        static void Bar1(out int value)
+        {
+            value = 5;
+            Console.WriteLine(value);
+        }
+        //in
+        static void Foo2(in int value)
+        {
+            Console.WriteLine(value);
+            //value = 10;
+        }
+        //params
+        static int Sum(string message, params int[] parameters)
+        {
+            int result = 0;
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                result += parameters[i];
+            }
+            return result;
+        }
+        static int Sum(params int[] parameters)
+        {
+            int result = 0;
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                result += parameters[i];
+            }
+            return result;
         }
         static void Main(string[] args)
         {
@@ -768,55 +817,7 @@ namespace FirstApp      //Пространство имён System
 
 
         }
-        //ref
-        static void Foo(ref int a)
-        {
-            a = -5;
-        }
-        static void Bar(int[] arr)
-        {
-            arr[0] = 15;
-            arr[3] = 30;
-        }
-        static ref int Func(int[] arr)
-        {
-            return ref arr[0];
-        }
-        //out
-        static void Foo1(ref int value)
-        {
-            Console.WriteLine(value);
-        }
-        static void Bar1(out int value)
-        {
-            value = 5;
-            Console.WriteLine(value);
-        }
-        //in
-        static void Foo2(in int value)
-        {
-            Console.WriteLine(value);
-            //value = 10;
-        }
-        //params
-        static int Sum(string message, params int[] parameters)
-        {
-            int result = 0;
-            for (int i = 0; i < parameters.Length; i++)
-            {
-                result += parameters[i];
-            }
-            return result;
-        }
-        static int Sum(params int[] parameters)
-        {
-            int result = 0;
-            for (int i = 0; i < parameters.Length; i++)
-            {
-                result += parameters[i];
-            }
-            return result;
-        }
+        
     }
     
 }
