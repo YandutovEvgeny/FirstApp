@@ -18,7 +18,7 @@
 //#define FUNCTION_OVERLOADING
 //#define VALUETYPES_REFERENCETYPE
 //#define NULL_NULLUNIT
-#define KEYWORD_REF
+#define KEYWORDS_REF_OUT_IN_PARAMS
 
 
 using System;
@@ -674,7 +674,7 @@ namespace FirstApp      //Пространство имён System
             else
                 Console.WriteLine(str);*/
             //Console.WriteLine(str ?? "Нет данных"); //Если str == null, выводится дефолтное значение - "Нет данных",
-            //если str != null, выводится str
+                                                      //если str != null, выводится str
             /*string result = str ?? string.Empty;    //В результат либо str, либо string.Empty, если null
             Console.WriteLine("Количество символов с строке " + result.Length);*/
             //Далее пример в Null_unitWF
@@ -702,8 +702,10 @@ namespace FirstApp      //Пространство имён System
             //Console.WriteLine("Сумма элементов массива " + (array?.Sum() ?? 0));
             //Далее пример в Null_unitWF
 #endif
-#if KEYWORD_REF
-            //Ключевое слово ref
+#if KEYWORDS_REF_OUT_IN_PARAMS
+            //Ключевое слово ref(Позволяет изменять переданную переменную)
+            //При передаче параметров с ключевым словом ref, мы передаём его по ссылке.
+            //Это означает, что мы не копируем параметры в локальную переменную, а работеам с одними и теми же данными
             //Передача аргументов по ссылке
             /*int a = 2;
             Foo(ref a);
@@ -724,10 +726,49 @@ namespace FirstApp      //Пространство имён System
             //как только мы в b поместили -5, то в нулевом элементе массива тоже будет -5,
             //т.к. это ссылочная локальная переменная
             b = -5;
+
+            //Ключевое слово out(Обязывает изменять переданную переменную)
+            //При передаче параметров с ключевым словом out, мы передаём его по ссылке 
+            //Разниуа между ключевым словом ref и out состоит в том, что при передаче параметров при
+            //помощи ref, мы можем не изменять переменную, которую предаём, однако, при передаче с помощью
+            //out, мы той переменной, которую передаём обязаны присвоить значение
+            int a1 = 10;  
+            Foo1(ref a1);
+            Bar1(out int c);
+            string str = Console.ReadLine();
+            int.TryParse(str, out int result);  //Задача метода TryParse в преобразовании строки в тип int
+            Console.WriteLine(result);
+
+            //Ключевое слово in(Не позволяет изменять переданную переменную)
+            //Появилось в версии 7.2
+            //При передаче параметров с ключевым словом in, мы передаём его по ссылке 
+            //При передаче параметра с ключевым словом in, переменная которую мы в метод передали
+            //не имеет возможности изменятся, становится по сути read only
+            int a2 = 5;
+            Foo2(a2);   //Не обязательно писать in при передаче параметров
+
+            //Ключевое слово params
+            //При разработке наших методов, не редко случается ситуация, когда нужно передать
+            //в метод с одинаковой логикой разное количество параметров, для этого существует
+            //пергрузка методов, однако, это выливается в большое кол-во строк кода. Именно для
+            //этих целей существует ключевое слово params, оно позволяет передать в метод сколько
+            //угодно параметров
+
+            int result1 = Sum(4,5,6,8); //<- Можем передать сколько угодно параметров
+            Console.WriteLine($"Сумма элементов: {result1}");
+
+            //Данные с ключевым словом params должны передоватся в метод самыми последними, это
+            //и логично, ведь иначе компилятор не поймёт где заканчиваются принимаемые параметры,
+            //params передаётся в метод почти как параметры по умолчанию в C++, то есть он всегда
+            //один в методе и всегда самый последний
+            //int result2 = Sum("test", 45, 65, 32); //<- Так правильно
+            //int result2 = Sum(45, 65, 32,"test"); //<- Так НЕ правильно
+
 #endif
 
 
         }
+        //ref
         static void Foo(ref int a)
         {
             a = -5;
@@ -740,6 +781,41 @@ namespace FirstApp      //Пространство имён System
         static ref int Func(int[] arr)
         {
             return ref arr[0];
+        }
+        //out
+        static void Foo1(ref int value)
+        {
+            Console.WriteLine(value);
+        }
+        static void Bar1(out int value)
+        {
+            value = 5;
+            Console.WriteLine(value);
+        }
+        //in
+        static void Foo2(in int value)
+        {
+            Console.WriteLine(value);
+            //value = 10;
+        }
+        //params
+        static int Sum(string message, params int[] parameters)
+        {
+            int result = 0;
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                result += parameters[i];
+            }
+            return result;
+        }
+        static int Sum(params int[] parameters)
+        {
+            int result = 0;
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                result += parameters[i];
+            }
+            return result;
         }
     }
     
