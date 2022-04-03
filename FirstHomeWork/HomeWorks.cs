@@ -7,6 +7,7 @@
 //#define FIFTH_HW
 //#define SIXTH_HW
 //#define SEVENTH_HW
+#define EIGHTH_HW
 using System;
 
 namespace HomeWorks
@@ -41,7 +42,76 @@ namespace HomeWorks
             }
             return myArray;
         }
-
+        //7HW
+        /*static void ShowArray<T>(ref T[] array)
+        {
+            for (int i = 0; i < array.Length; i++)
+            {
+                Console.Write(array[i] + "\t");
+            }
+            Console.WriteLine();
+        }
+        static void Resize<T>(ref T[] array, ref int numberOfElements) //generic - 
+        {
+            T[] newArray = new T[numberOfElements];
+            for (int i = 0; i < array.Length && i < newArray.Length; i++)
+                newArray[i] = array[i];
+            array = newArray;
+        }
+        static void PushFront(ref int[] array, int addElement)
+        {
+            int[] newArray = new int[array.Length + 1];
+            for (int i = 0; i < newArray.Length - 1; i++)
+            {
+                newArray[i + 1] = array[i];
+            }
+            newArray[0] = addElement;
+            array = newArray;
+        }
+        static void PushBack(ref int[] array, int addElement)
+        {
+            Insert(ref array, addElement, array.Length);
+        }
+        static void Insert(ref int[] array, int addElement, int insertIndex)
+        {
+            int[] newArray = new int[array.Length + 1];
+            for (int i = 0; i < insertIndex; i++)
+            {
+                newArray[i] = array[i];
+            }
+            for (int i = insertIndex; i < array.Length; i++)
+            {
+                newArray[i + 1] = array[i];
+            }
+            newArray[insertIndex] = addElement;
+            array = newArray;
+        }
+        static void Pop_front(ref int[] array)
+        {
+            Erase(ref array, 0);
+        }
+        static void Pop_back(ref int[] array)
+        {
+            int[] newArray = new int[array.Length - 1];
+            for (int i = 0; i < newArray.Length; i++)
+            {
+                newArray[i] = array[i];
+            }
+            array = newArray;
+        }
+        static void Erase(ref int[] array, int eraseIndex)
+        {
+            int[] newArray = new int[array.Length - 1];
+            for (int i = 0; i < eraseIndex; i++)
+            {
+                newArray[i] = array[i];
+            }
+            for (int i = eraseIndex; i < newArray.Length; i++)
+            {
+                newArray[i] = array[i + 1];
+            }
+            array = newArray;
+        }*/
         static void Main(string[] args)
         {
 #if FIRST_HW
@@ -406,77 +476,41 @@ namespace HomeWorks
             Erase(ref array, eraseIndex);
             ShowArray(ref array);
 #endif
-
-        }
-        //7HW
-        static void ShowArray<T>(ref T[]array)
-        {
+#if EIGHTH_HW
+            /*TODO: DONE 1)Реализовать вывод массива с помощью рекурсии
+                    DONE 2)Найти сумму элементов массива с помощью рекурсии
+                    3)Найти сумму цифр числа с помощью рекурсии*/
+            int[] array = new int[5];
+            Random random = new Random();
             for (int i = 0; i < array.Length; i++)
             {
-                Console.Write(array[i] + "\t");
+                array[i] = random.Next(100);
             }
+            int count = 0;
+            int sum = 0;
+
+            ShowArray(ref array, count);
             Console.WriteLine();
+            Console.WriteLine("Сумма элементов массива: ");
+            Sum(ref array, count, ref sum);
+            Console.WriteLine(sum);
+#endif
         }
-        static void Resize<T>(ref T[] array, ref int numberOfElements) //generic - шаблонный тип
+        static void ShowArray(ref int[] array, int count)
         {
-            T[] newArray = new T[numberOfElements];
-            for (int i = 0; i < array.Length && i < newArray.Length; i++)
-                newArray[i] = array[i];
-            array = newArray;
+            if (count == array.Length) return;
+            Console.Write(array[count++] + "\t");
+            ShowArray(ref array, count);
         }
-        static void PushFront(ref int[] array, int addElement)
+
+        static void Sum(ref int[] array, int count, ref int sum)
         {
-            int[] newArray = new int[array.Length + 1];
-            for (int i = 0; i < newArray.Length - 1; i++)
+            if (count == array.Length) return;
+            else
             {
-                newArray[i+1] = array[i];
+                sum += array[count++];
             }
-            newArray[0] = addElement;
-            array = newArray;
-        }
-        static void PushBack(ref int[]array, int addElement)
-        {
-            Insert(ref array, addElement, array.Length);
-        }
-        static void Insert(ref int[]array, int addElement, int insertIndex)
-        {
-            int[] newArray = new int[array.Length + 1];
-            for (int i = 0; i < insertIndex; i++)
-            {
-                newArray[i] = array[i];
-            }
-            for (int i = insertIndex; i < array.Length; i++)
-            {
-                newArray[i + 1] = array[i];
-            }
-            newArray[insertIndex] = addElement;
-            array = newArray;
-        }
-        static void Pop_front(ref int[]array)
-        {
-            Erase(ref array, 0);
-        }
-        static void Pop_back(ref int[]array)
-        {
-            int[] newArray = new int[array.Length - 1];
-            for (int i = 0; i < newArray.Length; i++)
-            {
-                newArray[i] = array[i];
-            }
-            array = newArray;
-        }
-        static void Erase(ref int[]array, int eraseIndex)
-        {
-            int[] newArray = new int[array.Length - 1];
-            for (int i = 0; i < eraseIndex; i++)
-            {
-                newArray[i] = array[i];
-            }
-            for (int i = eraseIndex; i < newArray.Length; i++)
-            {
-                newArray[i] = array[i + 1];
-            }
-            array = newArray;
+            Sum(ref array, count, ref sum);
         }
     }
 }

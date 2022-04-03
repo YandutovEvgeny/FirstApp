@@ -19,6 +19,8 @@
 //#define VALUETYPES_REFERENCETYPE
 //#define NULL_NULLUNIT
 //#define KEYWORDS_REF_OUT_IN_PARAMS
+//#define NAMED_DEFAULT_PARAMETERS
+#define RECURSION
 
 
 using System;
@@ -104,6 +106,19 @@ namespace FirstApp      //Пространство имён System
             for (int i = 0; i < parameters.Length; i++)
             {
                 result += parameters[i];
+            }
+            return result;
+        }
+        
+        //NAMED_DEFAULT_PARAMETERS
+        static int Sum(int a, int b, bool enableLogging = false)
+        {
+            int result = a + b;
+            if (enableLogging)
+            {
+                Console.WriteLine("Значение переменной а = " + a);
+                Console.WriteLine("Значение переменной b = " + b);
+                Console.WriteLine("Результат сложения: " + result);
             }
             return result;
         }
@@ -754,7 +769,7 @@ namespace FirstApp      //Пространство имён System
 #if KEYWORDS_REF_OUT_IN_PARAMS
             //Ключевое слово ref(Позволяет изменять переданную переменную)
             //При передаче параметров с ключевым словом ref, мы передаём его по ссылке.
-            //Это означает, что мы не копируем параметры в локальную переменную, а работеам с одними и теми же данными
+            //Это означает, что мы не копируем параметры в локальную переменную, а работаем с одними и теми же данными
             //Передача аргументов по ссылке
             /*int a = 2;
             Foo(ref a);
@@ -814,10 +829,33 @@ namespace FirstApp      //Пространство имён System
             //int result2 = Sum(45, 65, 32,"test"); //<- Так НЕ правильно
 
 #endif
+#if NAMED_DEFAULT_PARAMETERS
+            //Параметры по умолчанию
+            //Всё так же, как и в С++, параметры по умолчанию передаются всегда последними, их может
+            //быть сколько угодно, при вызове метода их передавать необязательно
 
+            //Именованные параметры, аргументы
+            //При использовании именованных параметров, нам не обязательно передавать их в том порядке
+            //в каком они принимаются в метод, вместо этого мы можем передать их так:
+            //тип_данных имя_переменной = имя_метода(параметр_1: значение, параметр_2: значение)
 
+            int result = Sum(enableLogging:true, a:500, b:1000); //Можем передать хоть так
+            //Console.WriteLine(result);
+
+#endif
+#if RECURSION
+            Foo(0);
+#endif
+            
         }
-        
+        //Recursion
+        static void Foo(int i)
+        {
+            Console.WriteLine(i);
+            if (i >= 3) return;
+            i++;
+            Foo(i); //<- Рекурсия
+        }
     }
     
 }
