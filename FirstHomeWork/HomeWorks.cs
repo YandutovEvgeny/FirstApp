@@ -7,7 +7,7 @@
 //#define FIFTH_HW
 //#define SIXTH_HW
 //#define SEVENTH_HW
-#define EIGHTH_HW
+//#define EIGHTH_HW
 using System;
 
 namespace HomeWorks
@@ -112,6 +112,34 @@ namespace HomeWorks
             }
             array = newArray;
         }*/
+        //8HW
+        static void ShowArray(int[] array, int count = 0)
+        {
+            /*if (count == array.Length) return;
+            Console.Write(array[count++] + "\t");
+            ShowArray(ref array);*/
+            if (count < array.Length)
+            {
+                Console.Write(array[count] + "\t");
+                ShowArray(array, count + 1);
+            }
+        }
+
+        static int Sum(int[] array, int count = 0)
+        {
+            /*if (count == array.Length) return 0;
+            sum += array[count++];
+            Sum(array);
+            return sum;*/
+            if (count >= array.Length) return 0;
+            return array[count] + Sum(array, count + 1);
+        }
+
+        static ulong NumberSum(ulong number)
+        {
+            if (number < 10) return number;
+            return number % 10 + NumberSum(number / 10);
+        }
         static void Main(string[] args)
         {
 #if FIRST_HW
@@ -479,38 +507,39 @@ namespace HomeWorks
 #if EIGHTH_HW
             /*TODO: DONE 1)Реализовать вывод массива с помощью рекурсии
                     DONE 2)Найти сумму элементов массива с помощью рекурсии
-                    3)Найти сумму цифр числа с помощью рекурсии*/
+                    DONE 3)Найти сумму цифр числа с помощью рекурсии 467 = 17*/
             int[] array = new int[5];
             Random random = new Random();
             for (int i = 0; i < array.Length; i++)
             {
                 array[i] = random.Next(100);
             }
-            int count = 0;
-            int sum = 0;
+            //int count = 0;
+            //int sum = 0;
+            ulong result = 0;
 
-            ShowArray(ref array, count);
+            ShowArray(array);
             Console.WriteLine();
             Console.WriteLine("Сумма элементов массива: ");
-            Sum(ref array, count, ref sum);
-            Console.WriteLine(sum);
+            Console.WriteLine(Sum(array));
+            
+            ulong number = 0;
+                try
+                {
+                    Console.WriteLine("Введите целое число: ");
+                    number = ulong.Parse(Console.ReadLine());
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Некорректный ввод! Введите целое число!");
+                    return;
+                } 
+
+            result = NumberSum(number);
+            Console.WriteLine($"Сумма числа {number} = {result}");
+
 #endif
         }
-        static void ShowArray(ref int[] array, int count)
-        {
-            if (count == array.Length) return;
-            Console.Write(array[count++] + "\t");
-            ShowArray(ref array, count);
-        }
-
-        static void Sum(ref int[] array, int count, ref int sum)
-        {
-            if (count == array.Length) return;
-            else
-            {
-                sum += array[count++];
-            }
-            Sum(ref array, count, ref sum);
-        }
+        
     }
 }

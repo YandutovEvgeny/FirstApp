@@ -20,7 +20,8 @@
 //#define NULL_NULLUNIT
 //#define KEYWORDS_REF_OUT_IN_PARAMS
 //#define NAMED_DEFAULT_PARAMETERS
-#define RECURSION
+//#define RECURSION
+#define TYPE_CONVERSION
 
 
 using System;
@@ -121,6 +122,14 @@ namespace FirstApp      //Пространство имён System
                 Console.WriteLine("Результат сложения: " + result);
             }
             return result;
+        }
+        //Recursion
+        static void Foo(int i)
+        {
+            Console.WriteLine(i);
+            if (i >= 3) return;
+            i++;
+            Foo(i); //<- Рекурсия
         }
         static void Main(string[] args)
         {
@@ -846,16 +855,18 @@ namespace FirstApp      //Пространство имён System
 #if RECURSION
             Foo(0);
 #endif
-            
+#if TYPE_CONVERSION
+            //Преобразование типов - процесс конвертации или привидения объекта одного типа данных в другой
+            //Преобразования бывают явные, не явные, сужающие и расширяющие
+            //Если с явными и не явными всё понятно, все правила как и в С++, то сужающие преобразования
+            //это когда мы объект больший "упаковываем" в объект меньший по размеру, например из double проебразовываем
+            //во float, или из int в byte, !!!есть риск потери даных!!!, с расширяющими преобразованиями всё наоборот, это когда мы
+            //объект меньший по размеру и диапазону значений преобразуем в объект больший по размеру, например из int в long
+
+#endif
+
         }
-        //Recursion
-        static void Foo(int i)
-        {
-            Console.WriteLine(i);
-            if (i >= 3) return;
-            i++;
-            Foo(i); //<- Рекурсия
-        }
+        
     }
     
 }
