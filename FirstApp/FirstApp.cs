@@ -21,7 +21,8 @@
 //#define KEYWORDS_REF_OUT_IN_PARAMS
 //#define NAMED_DEFAULT_PARAMETERS
 //#define RECURSION
-#define TYPE_CONVERSION
+//#define TYPE_CONVERSION
+#define ARIFMETICAL_OVERLOAD_CHECKED_UNCHECKED
 
 
 using System;
@@ -864,9 +865,44 @@ namespace FirstApp      //Пространство имён System
             //объект меньший по размеру и диапазону значений преобразуем в объект больший по размеру, например из int в long
 
 #endif
+#if ARIFMETICAL_OVERLOAD_CHECKED_UNCHECKED
+            //Баг с ядерным Ганди в игре Civilization основан на арифметическом переполнении, при котором мирный полководец Ганди
+            //внезапно атаковал других игроков ядерными бомбами 
+            byte agression = 1;
+            byte democracyModifier = 2;
+            /*checked
+            {
+                //Ключевое слово checked позволяет отслеживать переполнение не целого проекта, а отдельного выражения
+                agression = (byte)(agression - democracyModifier);
+            }*/
+            //Если же проверка включена во всём проекте, ключевое слово unchecked позволяет нам пропустить проверку
+            try
+            {
+                agression = checked((byte)(agression - democracyModifier));  //сужающее преобразование данных
+                Console.WriteLine(agression);
+            }
+            catch (OverflowException)
+            {
+                Console.WriteLine("Ошибка переполнения!");
+            }
+            
 
+            //Переполнение в С# бывает через нижнюю границу:
+            int bottom = int.MinValue;
+            bottom = bottom - 1;
+            Console.WriteLine(bottom);  //bottom == int.MaxValue
+
+            //И через верхнюю границу:
+            int top = int.MaxValue;
+            top = top + 1;
+            Console.WriteLine(top);     //bottom == int.MinValue
+
+            //Чтобы контролировать переполнение на уровне проекта переходим Solution Explorer -> FirstApp(ПКМ)/Properties -> Build
+            //-> Advanced -> Check for arifmetical overflow, тогда в 873 строке будет исключение, эта проверка замедляет выполнение программ
+
+#endif
         }
-        
+
     }
     
 }
