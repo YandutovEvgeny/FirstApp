@@ -22,13 +22,16 @@
 //#define NAMED_DEFAULT_PARAMETERS
 //#define RECURSION
 //#define TYPE_CONVERSION
-#define ARIFMETICAL_OVERLOAD_CHECKED_UNCHECKED
+//#define ARIFMETICAL_OVERLOAD_CHECKED_UNCHECKED
+//#define NULLABLE_TYPES
+#define KEYWORD_VAR
 
 
 using System;
 using System.Globalization;
 using System.Threading;
 using System.Linq;          //Позволяет раюотать с классом Array
+using System.Collections.Generic;
 
 namespace FirstApp      //Пространство имён System
 {
@@ -900,6 +903,81 @@ namespace FirstApp      //Пространство имён System
             //Чтобы контролировать переполнение на уровне проекта переходим Solution Explorer -> FirstApp(ПКМ)/Properties -> Build
             //-> Advanced -> Check for arifmetical overflow, тогда в 873 строке будет исключение, эта проверка замедляет выполнение программ
 
+#endif
+#if NULLABLE_TYPES
+            //Null-совместимые типы (Nullable)
+            /*string str = null;  
+            int a = null;   
+            DateTime dateTime = null;
+            DateTime? dateTime = null;*/
+
+            int? i = null;
+            //int? i = 2;
+                                                        //null         //Value = 2
+            Console.WriteLine(i==null);                 //true         //false
+            Console.WriteLine(i.HasValue);              //false        //true
+            Console.WriteLine(i.GetValueOrDefault());   //0            //2
+            Console.WriteLine(i.GetValueOrDefault(3));  //3            //2
+            Console.WriteLine(i ?? 55);                 //55           //2
+            //Console.WriteLine(i.Value);               //Invalid      //2
+            //                                          Operation
+            //                                          Exception
+            Console.WriteLine(i);                       //Ошибки нет   //2
+#endif
+#if KEYWORD_VAR
+            //Ключевое слово var
+            //неявно типизированные локальные переменные
+
+            //var - это НЕ тип данных, это ключевое слово, которое указывает компилятору на тот тип данных,
+            //который мы хотим присвить в переменную
+
+            var t = 5; //var = int
+            var str = "Hello World!"; //var = string
+            var arr = new float[10]; //var = float[]
+            Console.WriteLine
+                ($"{t.GetType()}\n{str.GetType()}\n{arr.GetType()}");   //Single == float
+            var s = "test";
+            s = null;
+            var ss = (string)null;  //Абсолютно бесполезная строка, но так можно делать
+
+            //Dictionary<int, string> dictionary = new Dictionary<int, string>();   //Либо так
+            var dictionary = new Dictionary<int, string>();     //Либо так, так правильнее
+
+            //var хорошо использовать с анонимными типами данных
+            var ano = new { Name = "Мартин", Age = 25 };
+            Console.WriteLine(ano.GetType());
+
+            //var и LINQ
+            int[] numbers = { 1, 5, 344, 40, 1, 24, 567, 32, 975, 97, 35 };
+
+            //Дословно Из числа в массиве numbers где число больше 50 выбрать число
+            var result = from i in numbers where i > 50 select i;
+            Console.WriteLine(result.GetType());
+            //Дословно Из числа в массиве numbers где число больше 50 отсортировать и выбрать число
+            result = from i in numbers where i > 50 orderby i select i;
+
+            foreach (var item in result)
+            {
+                Console.WriteLine($"{item}\t");
+            }
+            Console.WriteLine();
+            Console.WriteLine(result.GetType());
+
+            //Когда нельзя использовать var:
+            //1) В сигнатуре метода, var не может быть параметром метода (static void Bar(var a))
+            
+            //2) var не может быть возвращаемым параметром, есть исключение с обобщениями, но пока не о них
+            //(static var Foo(int a, int b))
+            
+            //3) var не может быть переменным членом(полем) класса
+            /*class MyClass
+            {
+                public var a = 0; 
+            }*/
+
+            //Ключевое слово var можно использовать только в локальном контексте программы
+            //var t = 90; //Поэтому и называется неявно типизированная ЛОКАЛЬНАЯ переменная
+            
 #endif
         }
 
