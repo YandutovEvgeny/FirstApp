@@ -24,7 +24,8 @@
 //#define TYPE_CONVERSION
 //#define ARIFMETICAL_OVERLOAD_CHECKED_UNCHECKED
 //#define NULLABLE_TYPES
-#define KEYWORD_VAR
+//#define KEYWORD_VAR
+#define ENUM
 
 
 using System;
@@ -979,8 +980,102 @@ namespace FirstApp      //Пространство имён System
             //var t = 90; //Поэтому и называется неявно типизированная ЛОКАЛЬНАЯ переменная
             
 #endif
+#if ENUM
+            //enum(перечисления)
+            //enum - это некий диапазон значений, список констант, который ограничивается конкретной логикой
+            /*while(true)
+            {
+                ConsoleKey key = Console.ReadKey().Key;
+                int keyCode = (int)key;
+                Console.WriteLine($"\tEnum {key}\tKey Code {keyCode}");
+
+                switch (key)
+                {
+                    case ConsoleKey.Enter: Console.WriteLine("Вы нажали enter"); break;
+                    case ConsoleKey.Backspace: Console.WriteLine("Вы нажали back space"); break;
+                    case ConsoleKey.Delete: Console.WriteLine("Вы нажали delete"); break;
+                }
+            }*/
+
+            /*DayOfWeek dayOfWeek = DayOfWeek.Sunday; //Экземпляр перечисления
+            //typeof возвращает тип данных
+            Console.WriteLine(Enum.GetUnderlyingType(typeof(DayOfWeek)));
+            Console.WriteLine(dayOfWeek);
+            Console.WriteLine((int)dayOfWeek);  //Приводим dayOfWeek к int, получаем номер Четверга
+            Console.WriteLine((DayOfWeek)3); //Приводим int к DayOfWeek, получаем значение под номером 3
+            Console.WriteLine(nextDay(dayOfWeek));*/
+
+            /*DayOfWeek dayOfWeek;
+            byte value = 5;
+            //dayOfWeek = (DayOfWeek)value;
+            //Метод IsDefined проверяет, есть ли в нашем enum, значение которое находится в перменной value
+            if (Enum.IsDefined(typeof(DayOfWeek), value))
+            {
+                dayOfWeek = (DayOfWeek)value;   //Приводим int k DayOfWeek
+            }
+            else
+            {
+                throw new Exception("Invalid DayOfWeek value");
+            }
+            Console.WriteLine(dayOfWeek);*/
+
+            //Метод GetValues позволяет получить инфо о всех доступных значениях
+            /*var values = Enum.GetValues(typeof(Color));
+            foreach (var value in values)
+            {
+                Console.WriteLine(value);
+            }*/
+            Console.WriteLine("Напишите какой цвет хотите вывести");
+            string str = Console.ReadLine();
+            //Если ignoreCase == true, это значит, что он будет игнорировать большие и маленькие буквы
+            Color color = (Color)Enum.Parse(typeof(Color), str, ignoreCase: true);
+            Console.WriteLine(color);
+
+
+            switch (color)
+            {
+                case Color.White:
+                    break;
+                case Color.Red:
+                    break;
+                case Color.Green:
+                    break;
+                case Color.Blue:
+                    break;
+                case Color.Orange:
+                    break;
+                default:
+                    break;
+            }
+#endif
+        }
+        static DayOfWeek nextDay(DayOfWeek day)
+        {
+            if (day < DayOfWeek.Sunday)
+                return day + 1;
+            return DayOfWeek.Monday;
+        }
+        enum DayOfWeek : byte   //Таким образом можно дать понять компилятору, что тип данных
+                                //в enum byte, а не int, как установлено по умолчанию
+        {
+            //Если явно не указать значение каждого перечисления, счёт начинается с 0
+            Monday,     //0
+            Tuesday,    //1
+            Wednesday,  //2...
+            Thursday,
+            Friday,
+            Saturday,
+            Sunday      //...6
         }
 
+        enum Color
+        {
+            White,
+            Red,
+            Green,
+            Blue,
+            Orange
+        }
     }
     
 }
