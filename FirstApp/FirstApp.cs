@@ -25,7 +25,9 @@
 //#define ARIFMETICAL_OVERLOAD_CHECKED_UNCHECKED
 //#define NULLABLE_TYPES
 //#define KEYWORD_VAR
-#define ENUM
+//#define ENUM
+//#define OOP_CLASS_OBJECT
+#define OOP_METHODS
 
 
 using System;
@@ -33,6 +35,7 @@ using System.Globalization;
 using System.Threading;
 using System.Linq;          //Позволяет раюотать с классом Array
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace FirstApp      //Пространство имён System
 {
@@ -136,6 +139,64 @@ namespace FirstApp      //Пространство имён System
             i++;
             Foo(i); //<- Рекурсия
         }
+        static DayOfWeek nextDay(DayOfWeek day)
+        {
+            if (day < DayOfWeek.Sunday)
+                return day + 1;
+            return DayOfWeek.Monday;
+        }
+        enum DayOfWeek : byte   //Таким образом можно дать понять компилятору, что тип данных
+                                //в enum byte, а не int, как установлено по умолчанию
+        {
+            //Если явно не указать значение каждого перечисления, счёт начинается с 0
+            Monday,     //0
+            Tuesday,    //1
+            Wednesday,  //2...
+            Thursday,
+            Friday,
+            Saturday,
+            Sunday      //...6
+        }
+        class Program
+        {
+            public static Student GetStudent()
+            {
+                Student student = new Student();
+                student.id = Guid.NewGuid();
+                student.firstName = "Женя";
+                student.lastName = "Яндутов";
+                student.middleName = "Анатольевич";
+                student.age = 21;
+                student.group = "PV-122";
+
+                return student;
+            }
+            public static void Print(Student student)
+            {
+                Console.WriteLine("Info about srudent:");
+                Console.WriteLine($"id:{student.id}");
+                Console.WriteLine($"first name:{student.firstName}");
+                Console.WriteLine($"last name:{student.lastName}");
+                Console.WriteLine($"middle name:{student.middleName}");
+                Console.WriteLine($"age:{student.age}");
+                Console.WriteLine($"group:{student.group}");
+            }
+        }
+        enum Color
+        {
+            White,
+            Red,
+            Green,
+            Blue,
+            Orange
+        }
+        class Point
+        {
+            public int X;   //Координата Х
+            public int Y;   //Координата Y
+            public Color color; //Цвет точек
+        }
+
         static void Main(string[] args)
         {
 #if VARIABLES
@@ -1048,34 +1109,30 @@ namespace FirstApp      //Пространство имён System
                     break;
             }
 #endif
-        }
-        static DayOfWeek nextDay(DayOfWeek day)
-        {
-            if (day < DayOfWeek.Sunday)
-                return day + 1;
-            return DayOfWeek.Monday;
-        }
-        enum DayOfWeek : byte   //Таким образом можно дать понять компилятору, что тип данных
-                                //в enum byte, а не int, как установлено по умолчанию
-        {
-            //Если явно не указать значение каждого перечисления, счёт начинается с 0
-            Monday,     //0
-            Tuesday,    //1
-            Wednesday,  //2...
-            Thursday,
-            Friday,
-            Saturday,
-            Sunday      //...6
-        }
+#if OOP_CLASS_OBJECT
+            //ООП   Класс   Объект
+            /*Point point = new Point();  //Создание и инициализация объекта
+            //point = null; //Если point == null, мы не имеем связи с переменными полями класса
+            point.X = 10;
+            point.Y = 8;
+            point.color = Color.Blue;
 
-        enum Color
-        {
-            White,
-            Red,
-            Green,
-            Blue,
-            Orange
+            Console.WriteLine("X:{0}\tY:{1}\tColor:{2}",point.X, point.Y, point.color);
+
+            Point point1 = new Point();
+            point1.X = 4;
+            point1.Y = 2;
+
+            Console.WriteLine("X`:{0}\tY`:{1}", point1.X, point1.Y);*/
+
+            var firstStudent = Program.GetStudent();
+            Program.Print(firstStudent);
+#endif
+#if OOP_METHODS
+
+#endif
         }
+        
     }
     
 }
