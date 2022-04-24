@@ -27,15 +27,13 @@
 //#define KEYWORD_VAR
 //#define ENUM
 //#define OOP_CLASS_OBJECT
-#define OOP_METHODS
+//#define OOP_METHODS
+//#define PUBLIC_PRIVATE_INCAPSULATION
+#define CONSTRUCTOR_DEFAULT_CONSTRUCTOR
 
 
 using System;
-using System.Globalization;
-using System.Threading;
-using System.Linq;          //Позволяет раюотать с классом Array
-using System.Collections.Generic;
-using System.Drawing;
+using System.Reflection;
 
 namespace FirstApp      //Пространство имён System
 {
@@ -118,7 +116,7 @@ namespace FirstApp      //Пространство имён System
             }
             return result;
         }
-        
+
         //NAMED_DEFAULT_PARAMETERS
         static int Sum(int a, int b, bool enableLogging = false)
         {
@@ -157,31 +155,7 @@ namespace FirstApp      //Пространство имён System
             Saturday,
             Sunday      //...6
         }
-        class Program
-        {
-            public static Student GetStudent()
-            {
-                Student student = new Student();
-                student.id = Guid.NewGuid();
-                student.firstName = "Женя";
-                student.lastName = "Яндутов";
-                student.middleName = "Анатольевич";
-                student.age = 21;
-                student.group = "PV-122";
 
-                return student;
-            }
-            public static void Print(Student student)
-            {
-                Console.WriteLine("Info about srudent:");
-                Console.WriteLine($"id:{student.id}");
-                Console.WriteLine($"first name:{student.firstName}");
-                Console.WriteLine($"last name:{student.lastName}");
-                Console.WriteLine($"middle name:{student.middleName}");
-                Console.WriteLine($"age:{student.age}");
-                Console.WriteLine($"group:{student.group}");
-            }
-        }
         enum Color
         {
             White,
@@ -190,12 +164,7 @@ namespace FirstApp      //Пространство имён System
             Blue,
             Orange
         }
-        class Point
-        {
-            public int X;   //Координата Х
-            public int Y;   //Координата Y
-            public Color color; //Цвет точек
-        }
+
 
         static void Main(string[] args)
         {
@@ -1129,10 +1098,131 @@ namespace FirstApp      //Пространство имён System
             Program.Print(firstStudent);
 #endif
 #if OOP_METHODS
+            //ООП
+            //Методы объекта класса
+            var firststudent = Program.GetStudent();
+            //firststudent.Print();
+            string fullname = firststudent.GetFullName();
 
+            /*Console.WriteLine();
+            Console.WriteLine();
+
+            var secondstudent = new Student();
+            secondstudent.firstName = "Martin";
+            secondstudent.Print();*/
+#endif
+#if PUBLIC_PRIVATE_INCAPSULATION
+            //модификаторы доступа public & private
+            //public - даёт доступ к полям класса на уровне объекта
+            //private - НЕ даёт доступ к полям класса на уровне объекта
+            /*PPoint point = new PPoint();
+            point.PrintPoint();*/
+
+            //Получаем информацию о модификаторах доступа
+            /*var typeinfo = typeof(PPoint).
+                GetFields(BindingFlags.Instance | 
+                BindingFlags.NonPublic | 
+                BindingFlags.Public);
+
+            foreach(var item in typeinfo)
+            {
+                Console.WriteLine($"{item.Name}\t" +
+                    $"isPrivate:{item.IsPrivate}\t" +
+                    $"isPublic:{item.IsPublic}");
+            }*/
+
+            //Инкапсуляция
+            //Суть инкапсуляции состоит в том, что мы скрываем состояние объекта, защищаем его от внешнего
+            //мира и даём возможность изменить это состояние только с помощью методов этого же объекта
+            Gun gun = new Gun();
+            gun.Shoot();
+#endif
+#if CONSTRUCTOR_DEFAULT_CONSTRUCTOR
+            //Конструктор
+            //Конструктор по-умолчанию
+            //Конструктор - это метод, который вызывается для создания объекта
+            /*Gun gun = new Gun(isLoaded:false);
+            for (int i = 0; i < 3; i++)
+            {
+                gun.Shoot();    //O(1);
+            }*/
+
+            //Перегрузка конструкторов
+            /*PPoint point = new PPoint(3, 5);    //Overloaded constructor
+            PPoint pPoint = new PPoint();   //Default constructor
+            point.PrintPoint();
+            pPoint.PrintPoint();*/
+
+            Student student = new Student("Шапошкин", new DateTime(2000, 10, 5));
+            Student student1 = new Student(student);
+
+            student.SetLastname("#####3#");
+
+            student.Print();
+            Console.WriteLine();
+            student1.Print();
 #endif
         }
-        
+        class Gun
+        {
+            //Поля состояния
+            private bool _isLoaded;  //Заряжена
+            //Поля поведения
+            public Gun()
+            {
+                _isLoaded = true;
+            }
+            public Gun(bool isLoaded)
+            {
+                _isLoaded = isLoaded;
+            }
+            private void Reload()
+            {
+                Console.WriteLine("заряжаю...");
+                _isLoaded = true;
+                Console.WriteLine("заряжена!");
+            }
+            public void Shoot()
+            {
+                if(!_isLoaded)
+                {
+                    Console.WriteLine("Орудие не заряжено!"); 
+                    Reload();
+                }
+                Console.WriteLine("Пиу пиу!\n");
+                _isLoaded = false;
+            }
+        }
+        class PPoint
+        {
+            int z = 3;  //По умолчанию private
+            private int _X;   //Координата Х
+            private int _Y;   //Координата Y
+            public Color color; //Цвет точек
+
+            public PPoint()
+            {
+                _X = _Y = 1;
+            }
+            public PPoint(int x, int y)
+            {
+                _X = x;
+                _Y = y;
+            }
+
+            private void PrintX()
+            {
+                Console.WriteLine($"X: {_X}");
+            }
+            private void PrintY()
+            {
+                Console.WriteLine($"Y: {_Y}");
+            }
+            public void PrintPoint()
+            {
+                PrintX();
+                PrintY();
+            }
+        }
     }
-    
 }
