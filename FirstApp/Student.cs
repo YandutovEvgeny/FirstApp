@@ -25,11 +25,13 @@ namespace FirstApp
             this.birthday = birthday;
         }
         public Student(string lastName, string firstName, string middleName, DateTime birthday)
+            : this(lastName, birthday) //<-Таким способом можно "делегировать" конструктор с двумя параметрами,
+            //дабы избавиться от дублирования кода
         {
-            this.lastName = lastName;
+            //this.lastName = lastName;
             this.firstName = firstName;
             this.middleName = middleName;
-            this.birthday = birthday;
+            //this.birthday = birthday;
         }
         public Student(Student student)
         {
@@ -50,7 +52,7 @@ namespace FirstApp
             Console.WriteLine($"last name: {lastName}");
             Console.WriteLine($"middle name: {middleName}");
             Console.WriteLine($"age: {age}");
-            Console.WriteLine($"birthday: {birthday}");
+            Console.WriteLine($"birthday: {birthday.ToString("dd.MM.yyyy")} г.");
             Console.WriteLine($"group: {group}");
         }
         public string GetFullName()

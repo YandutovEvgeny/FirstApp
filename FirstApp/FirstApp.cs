@@ -29,8 +29,9 @@
 //#define OOP_CLASS_OBJECT
 //#define OOP_METHODS
 //#define PUBLIC_PRIVATE_INCAPSULATION
-#define CONSTRUCTOR_DEFAULT_CONSTRUCTOR
-
+//#define CONSTRUCTOR_DEFAULT_CONSTRUCTOR
+//#define KEYWORD_THIS
+#define PROPERTIES
 
 using System;
 using System.Reflection;
@@ -1162,6 +1163,32 @@ namespace FirstApp      //Пространство имён System
             Console.WriteLine();
             student1.Print();
 #endif
+#if KEYWORD_THIS
+            //this
+            //Благодаря ключевому слову this, мы можем получить доступ к текущим полям класса
+            Student student = new Student("Шапошников","Пётр", "Иваныч", new DateTime(2000,10,5));
+            //нельзя писать ключевое слово this в static классах, методах, потому что, когда мы используем static методы
+            //у нас нет необходимости создавать экземпляры static класса, this даёт нам доступ к текущему экземпляру класса,
+            //а как можно получить доступ к тому, чего нет?
+            student.Print();
+#endif
+#if PROPERTIES
+            //Свойства(Properties)
+            //Автоматические свойства
+            
+            Point point = new Point();
+            point.SetX(3);
+            int x = point.GetX();
+            Console.WriteLine(x);
+
+            //point.Y = 10;
+            int y = point.Y;
+
+            point.Z = 10;
+            int z = point.Z;
+            Console.WriteLine(z);
+
+#endif
         }
         class Gun
         {
@@ -1196,33 +1223,93 @@ namespace FirstApp      //Пространство имён System
         class PPoint
         {
             int z = 3;  //По умолчанию private
-            private int _X;   //Координата Х
-            private int _Y;   //Координата Y
+            private int X;   //Координата Х
+            private int Y;   //Координата Y
             public Color color; //Цвет точек
 
             public PPoint()
             {
-                _X = _Y = 1;
+                X = Y = 1;
+            }
+            public void SetX(int x)
+            {
+                X = x;
+            }
+            public int GetX()
+            {
+                return X;
             }
             public PPoint(int x, int y)
             {
-                _X = x;
-                _Y = y;
+                X = x;
+                Y = y;
             }
 
             private void PrintX()
             {
-                Console.WriteLine($"X: {_X}");
+                Console.WriteLine($"X: {X}");
             }
             private void PrintY()
             {
-                Console.WriteLine($"Y: {_Y}");
+                Console.WriteLine($"Y: {Y}");
             }
             public void PrintPoint()
             {
                 PrintX();
                 PrintY();
             }
+        }
+        class Point
+        {
+            private int x;
+            private int y;
+            public int Z { get; set; }     //Автоматическое свойство
+            public void SetX(int x) //setter
+            {
+                if(x<1)
+                {
+                    this.x = 1;
+                    return;
+                }
+                if(x>5)
+                {
+                    this.x = 5;
+                    return;
+                }
+                this.x = x;
+            }
+            public int GetX()   //getter
+            {
+                return x;
+            }
+
+            //Свойство:
+            public int Y
+            {
+                //В данном контексте get и set - это аксессоры(accesors)
+                //Если у какого-нибудь аксессора будет модификатор private, то мы не сможем получить
+                //доступ к нему на уровне экзмепляра, в данном случае мы не можем присвоить данные полю y
+                get 
+                { 
+                    return y; 
+                }
+                private set 
+                { 
+                    if(value < 1)
+                    {
+                        y = 1;
+                        return;
+                    }
+                    if(value > 5)
+                    {
+                        y = 5;
+                        return; 
+                    }
+                    y = value; 
+                }
+            }
+
+
         }
     }
 }
