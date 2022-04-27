@@ -31,7 +31,8 @@
 //#define PUBLIC_PRIVATE_INCAPSULATION
 //#define CONSTRUCTOR_DEFAULT_CONSTRUCTOR
 //#define KEYWORD_THIS
-#define PROPERTIES
+//#define PROPERTIES
+#define STATIC_CLASS
 
 using System;
 using System.Reflection;
@@ -1189,6 +1190,75 @@ namespace FirstApp      //Пространство имён System
             Console.WriteLine(z);
 
 #endif
+#if STATIC_CLASS
+            //Ключевое слово static
+            //Статические поля класса
+
+            //Если переменное поле класса static, то нам нет необходимости создавать экземпляр того класса
+            //Если поле не статическое, то у каждого экземпляра класса будет свой собственный экземпляр этого поля
+            //и там можно хранить разные данные
+            //Если же поле статическое, то данные хранятся в отдельной области памяти
+
+            /*MyClass class1 = new MyClass();
+            class1.a = 44;  //Не статический экземпляр
+            MyClass class2 = new MyClass();
+            class2.a = 22;
+            MyClass.b = 23;*/   //Статический экземпляр
+
+            /*MyClass myClass1 = new MyClass();
+            myClass1.SetB(10);  //b=10
+
+            MyClass myClass2 = new MyClass();
+            myClass2.PrintB();*/ //10
+
+            //Статические методы класса
+            //Статические свойства класса
+
+            //Если мы применяем ключевое слово static к методу, мы можем его использовать не создавая экземпляр
+            //класса
+            //В статических методах невозможно использовать не статические члены класса
+            //Но в не статических методах могут быть вызваны статические методы на уровне экземпляра класса
+
+            /*MyClass myClass = new MyClass();
+            //myClass.Foo();    //Ошибка
+            myClass.Bar();
+            //MyClass.Foo();
+
+            MyClass.A = 3;
+            MyClass.C = 5;*/
+
+            /*CountClass countClass1 = new CountClass();
+            CountClass countClass2 = new CountClass();
+            CountClass countClass3 = new CountClass();
+            CountClass countClass4 = new CountClass();
+            CountClass countClass5 = new CountClass();
+
+            Console.WriteLine(countClass1.GetObjectsCounter()); 
+            Console.WriteLine(CountClass.Counter);
+            Console.WriteLine(CountClass.GetCounter());
+            Console.WriteLine(countClass1.ObjectCount);*/
+
+            //Статический конструктор
+
+            //Конструктор класса - метод класса, который используется, чтобы создать класс, сконструировать его
+            //Статический конструктор работает так же как и обычный конструктор, но только для всего, что
+            //имеет ключевое слово static(полей, методов, свойств)
+            //Статический конструктор всегда выполняется один раз при первом создании объекта, точнее до него
+
+            /*Class class1 = new Class();
+            new Class();
+            new Class();
+            new Class();
+
+            Class.Foo();
+            new Class();
+            new Class();
+            new Class();*/
+
+            DbRepository dbRepository = new DbRepository();
+
+            dbRepository.GetData();
+#endif
         }
         class Gun
         {
@@ -1310,6 +1380,110 @@ namespace FirstApp      //Пространство имён System
             }
 
 
+        }
+        class MyClass
+        {
+            //private int a;
+            private static int b;
+            private static int a;
+
+            public static int A
+            {
+                get { return a; }
+                set { a = value; }
+            }
+
+            public static int C { get; set; }
+
+            public static void Foo()
+            {
+                Console.WriteLine("Вызван метод Foo");
+                b = 5;
+                Console.WriteLine(b);
+                //Bar();    //Ошибки
+                //a = 5;
+            }
+
+            public void Bar()
+            {
+                Console.WriteLine("Вызван метод Bar");
+                Foo();
+                //Console.WriteLine(b);
+            }
+
+            /*public void SetB(int b)
+            {
+                //this.b = b;  //Ошибка
+                MyClass.b = b;
+            }
+
+            public void PrintB()
+            {
+                Console.WriteLine(b);
+            }*/
+        }
+        class CountClass
+        {
+            private static int counter;
+            public CountClass()
+            {
+                counter++;
+            }
+            public static int Counter
+            {
+                get { return counter; }
+                private set { counter = value; }    //Можем установить значение только внутри класса
+            }
+            public int ObjectCount
+            {
+                get { return counter; }
+            }
+            public static int GetCounter()
+            {
+                return counter;
+            } 
+            public int GetObjectsCounter()
+            {
+                return counter;
+            }
+        }
+        class Class
+        {
+            public Class()
+            {
+                Console.WriteLine("Конструктор");
+            }
+            //В любом классе можно использовать только 1 статический конструктор и он не может принимать параметры
+            static Class()
+            {
+                Console.WriteLine("Статический конструктор");
+            }
+
+            public static void Foo()
+            {
+                Console.WriteLine("Foo");
+            }
+        }
+        class DbRepository
+        {
+            private static string connectionString;
+
+           static DbRepository()
+            {
+                ConfigurationManager configurationManager = new ConfigurationManager();
+                connectionString = configurationManager.GetConnectionString();
+            }
+            public void GetData()
+            {
+                Console.WriteLine("Использую: " + connectionString);
+            }
+        }
+        class ConfigurationManager
+        {
+            public string GetConnectionString()
+            {
+                return "local DB";
+            }
         }
     }
 }
