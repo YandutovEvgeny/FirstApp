@@ -32,10 +32,14 @@
 //#define CONSTRUCTOR_DEFAULT_CONSTRUCTOR
 //#define KEYWORD_THIS
 //#define PROPERTIES
-#define STATIC_CLASS
+//#define STATIC_CLASS
+#define EXTENSION_METHODS
 
 using System;
 using System.Reflection;
+using Lesson_MyExtensions;
+using Lesson2_MyExtensions;
+using Lesson_2;
 
 namespace FirstApp      //Пространство имён System
 {
@@ -1255,9 +1259,46 @@ namespace FirstApp      //Пространство имён System
             new Class();
             new Class();*/
 
-            DbRepository dbRepository = new DbRepository();
+            /*DbRepository dbRepository = new DbRepository();
 
-            dbRepository.GetData();
+            dbRepository.GetData();*/
+
+            //Статический класс
+
+            //Как только мы добавим модификатор static в наш класс, мы не можем создать объект такого класса
+            //либо же экземпляр, что одно и тоже
+            //В статических классах, не возможно использовать не статические поля, методы, переменные и т.д,
+            //потому что для не статических членов класса, для того, чтобы их использовать нам надо создать экземпляр
+            //класса и у каждого экземпляра класса вот эти вот не статические компоненты свои собственные, а так как 
+            //класс у нас статический это означает, что мы впринципе никогда не сможем создать экземпляр этого класса,
+            //соответственно использовать такие не статические перемнные поля, свойства, методы вообще не имеет смысла,
+            //потому что мы всё равно не сможем ими воспользоваться
+
+            //Статические классы не умеют в наследовании и не умеют в интерфейсах
+
+            Myclass1.Foo3();
+            
+
+#endif
+#if EXTENSION_METHODS
+            //Extension методы(методы расширения)
+
+            //Суть методов расширения заключается в том, чтобы добавить новый функционал в уже существующие классы или 
+            //структуры и не модифицируя их
+
+            //1. Extension методы должны находится в статических классах и сами должны быть статическими
+            //2. В крупных проектах хорошо бы изолировать методы расширения, для того, чтобы их могли использовать
+            //только мы, для этого мы должны поменять пространство имён в классе в котором пишем меиоды расширения 
+
+            DateTime currentDateTime = DateTime.Now;
+            currentDateTime.Print();
+            Console.WriteLine(currentDateTime.IsDayOfWeek(System.DayOfWeek.Sunday));
+
+            Abiturient abiturient = new Abiturient() { FirstName = "Мартин", lastName = "Дугин" };
+            string fullName = abiturient.GetFullName();
+            Console.WriteLine(fullName);
+
+            
 #endif
         }
         class Gun
@@ -1469,10 +1510,10 @@ namespace FirstApp      //Пространство имён System
             private static string connectionString;
 
            static DbRepository()
-            {
+           {
                 ConfigurationManager configurationManager = new ConfigurationManager();
                 connectionString = configurationManager.GetConnectionString();
-            }
+           }
             public void GetData()
             {
                 Console.WriteLine("Использую: " + connectionString);
@@ -1484,6 +1525,14 @@ namespace FirstApp      //Пространство имён System
             {
                 return "local DB";
             }
+        }
+        static class Myclass1
+        {
+            public static void Foo3()
+            {
+                Console.WriteLine("Foo");
+            }
+
         }
     }
 }
