@@ -33,7 +33,11 @@
 //#define KEYWORD_THIS
 //#define PROPERTIES
 //#define STATIC_CLASS
-#define EXTENSION_METHODS
+//#define EXTENSION_METHODS
+//#define KEYWORD_PARTIAL
+//#define CONST_READONLY
+//#define SYNTACS_OBJECT_INITIALIZE
+#define INHARITANCE
 
 using System;
 using System.Reflection;
@@ -1288,7 +1292,7 @@ namespace FirstApp      //Пространство имён System
 
             //1. Extension методы должны находится в статических классах и сами должны быть статическими
             //2. В крупных проектах хорошо бы изолировать методы расширения, для того, чтобы их могли использовать
-            //только мы, для этого мы должны поменять пространство имён в классе в котором пишем меиоды расширения 
+            //только мы, для этого мы должны поменять пространство имён в классе в котором пишем методы расширения 
 
             DateTime currentDateTime = DateTime.Now;
             currentDateTime.Print();
@@ -1299,6 +1303,102 @@ namespace FirstApp      //Пространство имён System
             Console.WriteLine(fullName);
 
             
+#endif
+#if KEYWORD_PARTIAL
+            //Ключевое слово partial
+            //Частичные типы
+            //partial классы
+            //partial методы
+
+            //Когда мы используем ключевое слово partial вместе с классом, оно позволяет код этого класса
+            //разнести по разным файлам, таким образом наш класс превращается в частичный
+            //Чтобы реализовать partial класс достаточно поставить ключевое слово partial, создать файл с новым
+            //классом в который мы будем делить предыдущий класс и в новый класс добавить то, что нам нужно из делимого класса.
+            //У обоих классов сигнатура должна быть например: public partial class Human
+
+            // !!!!PARTIAL МЕТОДЫ ДОСТУПНЫ ТОЛЬКО В С# 9.0 И ВЫШЕ!!!!
+            //Когда мы используем ключевое слово partial вместе с методом, оно позволяет код этого метода
+            //разнести на части, так что разные части этого метода будут в разных частях partial класса
+            //Чтобы реализовать partial методы нам нужно в делимом классе оставить только сигнатуру метода со словом partial,
+            //например: public partial string GetFullName();, а в классе делителе оставить полную реализацию метода вместе с сигнатурой и 
+            //ключевым словом partial, например:
+            /*public partial string GetFullName()
+            {
+                //Возврат полного имени человека
+            }*/
+
+
+            Person person = new Person("Петр", "Иванович");
+            person.PrintFullName();
+#endif
+#if CONST_READONLY
+            //const и readonly
+
+            //Модификатор const позволяет сделать так, чтобы у нас никогда не было возможности изменить
+            //данные в переменных полях после того, как мы их туда поместили
+            //При создании const переменных полей класса, их необходимо инициализировать, иначе проект не скомпилируется 
+            //Все поля у которых есть модификатор const - неявно статические, это всё равно, что static const и явно присвоить
+            //модификатор static неполучится
+
+            //Модификатор readonly позволяет создать переменную и не инициализировать её при создании, но инициализировать
+            //её мы можем, и при этом readonly не является неявно static и мы можем присвоить модификатор static
+            //Мы нигде не можем присвоить значение переменной readonly, кроме как при создании и в конструкторе и после
+            //присвоения туда данных изменить их мы уже не сможем
+            //Все static readonly поля нужно инициализировать в static конструкторе
+
+            //Consts consts = new Consts(4);
+            Console.WriteLine( Consts.PI );
+            //Consts.b = 3;   //Error
+            Console.WriteLine(Consts.b);
+            
+#endif
+#if SYNTACS_OBJECT_INITIALIZE
+            //Синтаксис инициализации объектов
+           
+            //В первом случае у нас сначала создаётся объект, а потом присваиваются данные в поля
+            Cat cat = new Cat();
+            cat.Age = 3;
+            cat.Name = "Боня";
+
+            //Во втором случае у нас полная инициализация объекта со всеми его полями
+            Cat cat1 = new Cat
+            {
+                Age = 3,
+                Name = "Боня"
+            };
+
+            Cat cat2 = new Cat("Барсик");
+            cat2.Age = 3;
+
+            Cat cat3 = new Cat("Барсик")
+            {
+                Age = 3
+            };
+
+            //Результат показыает, что примеры кода во вторых случаях более читабельны и лучше для восприятия
+#endif
+#if INHARITANCE
+            //Наследование в ООП
+
+            //Множественное наследование в С# как таковое запрещено
+
+            /*Student student = new Student { FirstName = "Санёк", LastName = "Иванов" };
+            student.FullName();
+            student.PrintWork();
+
+            Employee employee = new Employee { FirstName = "Роман", LastName = "Сащеко" };
+            employee.FullName();
+            employee.PrintWork();*/
+
+            //Наследование, конструкторы класса и ключевое слово base
+
+            //Ключевое слово base позволяет нам в конструкторе наследника, реализовать все функции 
+            //конструктора родителя(базового класса), а также base, как и this в некоторых случаях
+            //помогает внести ясность в логику программы, если this - это указатель на объект текущего класса,
+            //то base - указатель на объект базового класса
+
+            Point3D point3D = new Point3D(5,4,3);
+            point3D.Print3D();
 #endif
         }
         class Gun
@@ -1322,9 +1422,9 @@ namespace FirstApp      //Пространство имён System
             }
             public void Shoot()
             {
-                if(!_isLoaded)
+                if (!_isLoaded)
                 {
-                    Console.WriteLine("Орудие не заряжено!"); 
+                    Console.WriteLine("Орудие не заряжено!");
                     Reload();
                 }
                 Console.WriteLine("Пиу пиу!\n");
@@ -1377,12 +1477,12 @@ namespace FirstApp      //Пространство имён System
             public int Z { get; set; }     //Автоматическое свойство
             public void SetX(int x) //setter
             {
-                if(x<1)
+                if (x < 1)
                 {
                     this.x = 1;
                     return;
                 }
-                if(x>5)
+                if (x > 5)
                 {
                     this.x = 5;
                     return;
@@ -1400,23 +1500,23 @@ namespace FirstApp      //Пространство имён System
                 //В данном контексте get и set - это аксессоры(accesors)
                 //Если у какого-нибудь аксессора будет модификатор private, то мы не сможем получить
                 //доступ к нему на уровне экзмепляра, в данном случае мы не можем присвоить данные полю y
-                get 
-                { 
-                    return y; 
+                get
+                {
+                    return y;
                 }
-                private set 
-                { 
-                    if(value < 1)
+                private set
+                {
+                    if (value < 1)
                     {
                         y = 1;
                         return;
                     }
-                    if(value > 5)
+                    if (value > 5)
                     {
                         y = 5;
-                        return; 
+                        return;
                     }
-                    y = value; 
+                    y = value;
                 }
             }
 
@@ -1482,7 +1582,7 @@ namespace FirstApp      //Пространство имён System
             public static int GetCounter()
             {
                 return counter;
-            } 
+            }
             public int GetObjectsCounter()
             {
                 return counter;
@@ -1509,11 +1609,11 @@ namespace FirstApp      //Пространство имён System
         {
             private static string connectionString;
 
-           static DbRepository()
-           {
+            static DbRepository()
+            {
                 ConfigurationManager configurationManager = new ConfigurationManager();
                 connectionString = configurationManager.GetConnectionString();
-           }
+            }
             public void GetData()
             {
                 Console.WriteLine("Использую: " + connectionString);
@@ -1533,6 +1633,94 @@ namespace FirstApp      //Пространство имён System
                 Console.WriteLine("Foo");
             }
 
+        }
+        class Consts
+        {
+            public const double PI = 3.14;  //Явно static
+            public const string MY_ERROR = "some error";    //Явно static
+            public readonly int a;  //Неявно static
+            public static readonly int b;   //Неявно static
+            static Consts()
+            {
+                b = 3;
+            }
+            public Consts(int a)
+            {
+                this.a = a;
+            }
+            public void Foo()
+            {
+                Console.WriteLine(PI);
+                Console.WriteLine(MY_ERROR);
+                Console.WriteLine(b);
+            }
+        }
+        class Cat
+        {
+            public int Age { get; set; }
+            public string Name { get; set; }
+            public Cat()
+            {
+
+            }
+            public Cat(string name)
+            {
+                Name = name;
+            }
+
+        }
+        class Human
+        {
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+            public void FullName()
+            {
+                Console.WriteLine(FirstName + " " + LastName);
+            }
+        }
+        class Student : Human
+        {
+            public void PrintWork()
+            {
+                Console.WriteLine("Я учусь!");
+            }
+        }
+        class Employee : Human
+        {
+            public void PrintWork()
+            {
+                Console.WriteLine("Я работаю!");
+            }
+        }
+        class Point2D
+        {
+            public int X { get; set; }
+            public int Y { get; set; }
+            public Point2D(int x, int y)
+            {
+                X = x;
+                Y = y;
+                Console.WriteLine("Вызван конструктор класса Point2D");
+            }
+            public void Print2D()
+            {
+                Console.WriteLine("X:\t"  +X);
+                Console.WriteLine("Y:\t"  +Y);
+            }
+        }
+        class Point3D : Point2D
+        {
+            public int Z { get; set; }
+            public Point3D(int x, int y, int z):base(x,y)
+            {
+                Z = z;
+                Console.WriteLine("Вызван конструктор класса Point3D");
+            }
+            public void Print3D()
+            {
+                Print2D();
+                Console.WriteLine("Z:\t"  +Z);
+            }
         }
     }
 }
