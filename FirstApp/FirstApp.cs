@@ -37,7 +37,8 @@
 //#define KEYWORD_PARTIAL
 //#define CONST_READONLY
 //#define SYNTACS_OBJECT_INITIALIZE
-#define INHARITANCE
+//#define INHARITANCE
+#define POLYMORPHISM
 
 using System;
 using System.Reflection;
@@ -1397,9 +1398,90 @@ namespace FirstApp      //Пространство имён System
             //помогает внести ясность в логику программы, если this - это указатель на объект текущего класса,
             //то base - указатель на объект базового класса
 
-            Point3D point3D = new Point3D(5,4,3);
-            point3D.Print3D();
+            /*Point3D point3D = new Point3D(5,4,3);
+            point3D.Print3D();*/
+
+            //Привидение типов и наследование
+            //Использование операторов is и as
+
+            /*object obj = new Point2D(3,5);
+            //object obj = " ";
+            //В данном случае мы явно говорим компилятору, что obj, это на самом деле Point2D
+            //Point2D point = (Point2D)obj;
+            //Foo(obj);
+            Bar(obj);*/
+
+            //Модификатор доступа protected при наследовании
+
+            //Модификатор protected никогда не доступен на уровне объекта класса, но доступен в классе
+            //наследнике
+
+            /*A a = new A();
+            Console.WriteLine(a.publicField);      //Поле доступно
+            //Console.WriteLine(a.privateField);   //Поле не доступно
+            //Console.WriteLine(a.protectedField); //Поле не доступно
+
+            B b = new B();
+            Console.WriteLine(a.publicField);      //Поле доступно
+            //Console.WriteLine(a.privateField);   //Поле не доступно
+            //Console.WriteLine(a.protectedField); //Поле не доступно
+
+            b.foo();
+            b.bar();*/
 #endif
+#if POLYMORPHISM
+            //Полиморфизм
+            //Виртуальные методы
+            //модификатор virual
+            //модификатор override
+
+            //Полиморфизм - это инструмент в ООП который может использоваться при наследовании
+            //Виртуальным называется метод, который может быть переопределён в дочернем классе, для этого
+            //у метода, который в базовом классе должно быть ключевое слово virtual, а у метода, которы в 
+            //дочерем классе должно быть ключевое слово override
+
+            //Car car = new SportCar();
+            Driver driver = new Driver();
+            driver.Drive(new SportCar());
+#endif
+        }
+        static void Foo(object obj)
+        {
+            //С помощью оператора as преобразовываем obj в тип данных Point2D
+            //Преимущество в преобразовании с помощью оператора as состоит в том, что если в принимаемые
+            //параметры функции попадёт объект типа Point2D, то логика успешно пойдёт выполнятся дальше, а
+            //если в принимаемые параметры попадёт объект другого типа, то в переменную запишется null и 
+            //исключения не будет
+            Point2D point = obj as Point2D;
+            //В данной ситуации если в принимаемые параметры функции попадёт объект типа Point2D,
+            //то логика успешно пойдёт выполнятся дальше, а если в принимаемые параметры попадёт
+            //объект другого типа, то выпадет исключение
+            //Point2D point = (Point2D)obj;
+            if (point != null)
+            {
+                point.Print2D();
+            }
+            else
+                Console.WriteLine("point = null");
+        }
+        static void Bar(object obj)
+        {
+            //Оператор is просто позволяет проверить тип данных в переменной obj
+            /*if(obj is Point2D)
+            {
+                //При таком условии "небезопасное" приведение типов не бросит исключение, потому что
+                //мы точно знаем, что в obj тип данных Point2D
+                Point2D point = (Point2D)obj;
+                point.Print2D();
+            }*/
+            //В версии якыка 7.0 можно сразу после проверки типа, если проверка была успешна, поместить данные
+            //в отдельный объект
+            if(obj is Point2D point)
+            {
+                point.Print2D();
+            }
+            else
+                Console.WriteLine("obj != Point2D");
         }
         class Gun
         {
@@ -1720,6 +1802,75 @@ namespace FirstApp      //Пространство имён System
             {
                 Print2D();
                 Console.WriteLine("Z:\t"  +Z);
+            }
+        }
+        class A
+        {
+            public int publicField;
+            private int privateField;
+            protected int protectedField;
+            public A()
+            {
+                Console.WriteLine(publicField); //Поле доступно
+                Console.WriteLine(privateField); //Поле доступно
+                Console.WriteLine(protectedField); //Поле доступно
+            }
+            public void foo()
+            {
+                Console.WriteLine(publicField); //Поле доступно
+                Console.WriteLine(privateField); //Поле доступно
+                Console.WriteLine(protectedField); //Поле доступно
+            }
+
+        }
+        class B : A
+        {
+            public B()
+            {
+                Console.WriteLine(publicField);    //Поле доступно
+                //Console.WriteLine(privateField); //Поле не доступно, т.к. прямой доступ к нему имеет только
+                                                   //тот класс, где написанно данное поле
+                Console.WriteLine(protectedField); //Поле доступно
+
+            }
+            public void bar()
+            {
+                foo();
+            }
+        }
+        class Car
+        {
+            protected virtual void StarEngine()
+            {
+                Console.WriteLine("Двигатель запущен!");
+            }
+            //Чтобы переопределить какой-то метод в базовом классе, у этого метода должен быть модификатор
+            //virtual
+            public virtual void Drive() //виртуальный метод
+            {
+                StarEngine();
+                Console.WriteLine("Я машина, я еду!");
+            }
+        }
+        class Driver
+        {
+            public void Drive(Car car)
+            {
+                car.Drive();
+            }
+        }
+        class SportCar : Car
+        {
+            protected override void StarEngine()
+            {
+                Console.WriteLine("бу бу бу бу ан ан ан");
+            }
+            //Для переопределения метода, сигнатура переопределяющего метода должна быть идентичной
+            //сигнатуре переопределяемого метода
+            public override void Drive()
+            {
+                StarEngine();
+                Console.WriteLine("Я еду очень быстро");
             }
         }
     }
