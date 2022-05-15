@@ -38,7 +38,9 @@
 //#define CONST_READONLY
 //#define SYNTACS_OBJECT_INITIALIZE
 //#define INHARITANCE
-#define POLYMORPHISM
+//#define POLYMORPHISM
+#define ABSTRACT_CLASS
+#define INTERFACES
 
 using System;
 using System.Reflection;
@@ -1444,6 +1446,63 @@ namespace FirstApp      //Пространство имён System
             Driver driver = new Driver();
             driver.Drive(new SportCar());
 #endif
+#if ABSTRACT_CLASS
+            //Полиморфизм
+            //Абстрактный класс
+            //Абстрактный метод
+            //Абстрактные свойства
+
+            //Абстрактный класс не имеет экземпляров класса
+            //Абстрактный класс нужен для того, чтобы описать такие вещи как, транспорт, животные, оружие и т.д.
+            //Абстрактные методы должны находится только в абстрактных классах
+            //Абстрактные методы не имеют реализацию, реализацию(переопределение) абстрактного метода выполняет дочерний класс
+            //унаследованный от абстрактного класса
+
+            Player player = new Player();
+            /*Pistol pistol = new Pistol();
+            MachineGun machineGun = new MachineGun();
+            GrenadeLauncher grenadeLauncher = new GrenadeLauncher();
+            string[] weapons = { "Пистолет", "Пулемёт", "Гранатомёт" };
+            Weapon[] inventory = { new Pistol(), new MachineGun(), new GrenadeLauncher() };
+
+            Console.WriteLine("Выберите из чего хотите выстрелить:");
+            for (int i = 0; i < inventory.Length; i++)
+            {
+                Console.WriteLine($"{i + 1}. {weapons[i]} Урон: {inventory[i].Damage}");
+            }
+            char choose = char.Parse(Console.ReadLine());
+            switch (choose)
+            {
+                case '1': player.Fire(pistol); break;
+                case '2': player.Fire(machineGun); break;
+                case '3': player.Fire(grenadeLauncher); break;
+            }*/
+
+            Weapon[] inventory = { new Pistol(), new MachineGun(), new GrenadeLauncher() };
+            foreach (var gun in inventory)
+            {
+                player.CheckInfo(gun);
+                player.Fire(gun);
+                Console.WriteLine();
+            }
+            player.CheckInfo(new Box());
+#endif
+#if INTERFACES
+            //Интерфейсы и полиморфизм
+            //С помощью интрефейса мы определяем поведение, которое в последствии будет реализовано 
+            //в каком-то конкретном классе
+            //Главным отличием интерфейса от абстрактного класса, в том что интерфейс позволяет 
+            //множественное наследование, они могут наследоваться между собой, причём один интерфейс может
+            //наследовать несколько разных, так и один определённый класс может наследовать несколько интерфейсов
+            //!!!В интерфейсе, в отличии от абстрактного класса не может быть конструктора и переменных
+            //членов, это связанно с тем, что интерфейс должен определять поведение и контракт, но не должны
+            //содержать реализации!!!
+
+            IDataProcessor dataProcessor = new ConsoleDataProcessor();
+            dataProcessor.ProcessData(new DbDataProvider());
+            dataProcessor.ProcessData(new FileDataProvider());
+            dataProcessor.ProcessData(new ApiDataProvider());
+#endif
         }
         static void Foo(object obj)
         {
@@ -1840,7 +1899,7 @@ namespace FirstApp      //Пространство имён System
         }
         class Car
         {
-            protected virtual void StarEngine()
+            protected virtual void StartEngine()
             {
                 Console.WriteLine("Двигатель запущен!");
             }
@@ -1848,7 +1907,7 @@ namespace FirstApp      //Пространство имён System
             //virtual
             public virtual void Drive() //виртуальный метод
             {
-                StarEngine();
+                StartEngine();
                 Console.WriteLine("Я машина, я еду!");
             }
         }
@@ -1861,7 +1920,7 @@ namespace FirstApp      //Пространство имён System
         }
         class SportCar : Car
         {
-            protected override void StarEngine()
+            protected override void StartEngine()
             {
                 Console.WriteLine("бу бу бу бу ан ан ан");
             }
@@ -1869,8 +1928,113 @@ namespace FirstApp      //Пространство имён System
             //сигнатуре переопределяемого метода
             public override void Drive()
             {
-                StarEngine();
+                StartEngine();
                 Console.WriteLine("Я еду очень быстро");
+            }
+        }
+
+        interface IHasInfo
+        {
+            void ShowInfo();
+        }
+        interface IWeapon
+        {
+            int Damage { get; }
+            void Fire();
+        }
+
+        abstract class Weapon : IHasInfo, IWeapon
+        {
+            public abstract int Damage { get; }
+            public abstract void Fire();
+            public void ShowInfo()
+            {
+                Console.WriteLine($"{GetType().Name} Damage: {Damage}");
+            }
+        }
+        class Pistol : Weapon
+        {
+            public override int Damage { get { return 5; } }
+
+            //Ключевое слово override работает для переопределения виртуальных методов
+            //и для переопределения абстрактных методов
+            public override void Fire()
+            {
+                Console.WriteLine("Пау пау пау");
+            }
+        }
+        class MachineGun : Weapon
+        {
+            public override int Damage => 20;
+
+            public override void Fire()
+            {
+                Console.WriteLine("Тратататта");
+            }
+        }
+        class GrenadeLauncher : Weapon
+        {
+            public override int Damage { get { return 100; } }
+
+            public override void Fire()
+            {
+                Console.WriteLine("Фшшшшшшшшшш     БАМ!!!");
+            }
+        }
+        class Player
+        {
+            public void Fire(IWeapon weapon)
+            {
+                weapon.Fire();
+            }
+            public void CheckInfo(IHasInfo hasInfo)
+            {
+                hasInfo.ShowInfo();
+            }
+        }
+        class Box : IHasInfo
+        {
+            public void ShowInfo()
+            {
+                Console.WriteLine("Просто коробка");
+            }
+        }
+
+        interface IDataProvider
+        {
+            //Все поля в интерфейсе заведомо public 
+            string GetData();
+        }
+        interface IDataProcessor
+        {
+            void ProcessData(IDataProvider dataProvider);
+        }
+        class ConsoleDataProcessor : IDataProcessor
+        {
+            public void ProcessData(IDataProvider dataProvider)
+            {
+                Console.WriteLine(dataProvider.GetData());
+            }
+        }
+        class DbDataProvider : IDataProvider
+        {
+            public string GetData()
+            {
+                return "Данные из базы данных";
+            }
+        }
+        class FileDataProvider : IDataProvider
+        {
+            public string GetData()
+            {
+                return "Данные из файла";
+            }
+        }
+        class ApiDataProvider : IDataProvider
+        {
+            public string GetData()
+            {
+                return "Данные из API";
             }
         }
     }
