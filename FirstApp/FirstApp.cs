@@ -39,7 +39,7 @@
 //#define SYNTACS_OBJECT_INITIALIZE
 //#define INHARITANCE
 //#define POLYMORPHISM
-#define ABSTRACT_CLASS
+//#define ABSTRACT_CLASS
 #define INTERFACES
 
 using System;
@@ -1498,10 +1498,48 @@ namespace FirstApp      //Пространство имён System
             //членов, это связанно с тем, что интерфейс должен определять поведение и контракт, но не должны
             //содержать реализации!!!
 
-            IDataProcessor dataProcessor = new ConsoleDataProcessor();
+            /*IDataProcessor dataProcessor = new ConsoleDataProcessor();
             dataProcessor.ProcessData(new DbDataProvider());
             dataProcessor.ProcessData(new FileDataProvider());
-            dataProcessor.ProcessData(new ApiDataProvider());
+            dataProcessor.ProcessData(new ApiDataProvider());*/
+
+            //Наследование интерфейсов
+            //Множественное наследование интерфейсов
+
+            /*Player1 player1 = new Player1();
+            IWeapon1[] guns = { new Gun1(), new LaserGun1(), new Knife() };
+
+            foreach (var gun in guns)
+            {
+                player1.Fire(gun);
+                Console.WriteLine();
+            }
+            player1.Throw(new Knife());*/
+
+            //Явная реализация интерфейсов
+            //В C# класс может реализовать 2 интерфейса у которых одинаковые методы, если нам нужна 
+            //разная реализация этих методов, нам нужно реализовать эти интерфейсы явно
+            YouClass youClass = new YouClass();
+            Foo(youClass);
+            Bar(youClass);
+
+            YouOtherClass youOtherClass = new YouOtherClass();
+            /*Foo(youOtherClass);
+            Bar(youOtherClass);*/
+
+            /*IFirstInterface firstInterface = youOtherClass;
+            firstInterface.Action();*/
+
+            /*((IFirstInterface)youOtherClass).Action();
+            ((ISecondInterface)youOtherClass).Action();*/
+
+            //object obj = new object();
+            //Если объект youOtherClass реализует интерфейс IFirstInterface
+            if(youOtherClass is IFirstInterface firstInterface)
+            {
+                //Выполняется метод Action()
+                firstInterface.Action();
+            }
 #endif
         }
         static void Foo(object obj)
@@ -1943,7 +1981,7 @@ namespace FirstApp      //Пространство имён System
             void Fire();
         }
 
-        abstract class Weapon : IHasInfo, IWeapon
+        abstract class Weapon : IHasInfo, IWeapon //Реализация интерфейсов
         {
             public abstract int Damage { get; }
             public abstract void Fire();
@@ -2035,6 +2073,89 @@ namespace FirstApp      //Пространство имён System
             public string GetData()
             {
                 return "Данные из API";
+            }
+        }
+
+        interface IWeapon1
+        {
+            void Fire();
+        }
+        interface IThrowingWeapon : IWeapon1
+        {
+            void Throw();
+        }
+        class Gun1 : IWeapon1
+        {
+            public void Fire()
+            {
+                Console.WriteLine($"{GetType().Name}: Паф!");
+            }
+        }
+        class LaserGun1 : IWeapon1
+        {
+            public void Fire()
+            {
+                Console.WriteLine($"{GetType().Name}: Пиу!");
+            }
+        }
+        class Knife : IThrowingWeapon
+        {
+            public void Fire()
+            {
+                Console.WriteLine($"{GetType().Name}: Хыщ!");
+            }
+            public void Throw()
+            {
+                Console.WriteLine($"{GetType().Name}: Фъють!");
+            }
+        }
+        class Player1
+        {
+            public void Fire(IWeapon1 weapon1)
+            {
+                weapon1.Fire();
+            }
+            public void Throw(IThrowingWeapon throwingWeapon)
+            {
+                throwingWeapon.Throw();
+            }
+        }
+
+        interface IFirstInterface
+        {
+            void Action();
+        }
+        interface ISecondInterface
+        {
+            void Action();
+        }
+        static void Foo(IFirstInterface firstInterface)
+        {
+            firstInterface.Action();
+        }
+        static void Bar(ISecondInterface secondInterface)
+        {
+            secondInterface.Action();
+        }
+        class YouClass : IFirstInterface, ISecondInterface
+        {
+            public void Action()
+            {
+                Console.WriteLine("YouClass action");
+            }
+        }
+        class YouOtherClass : IFirstInterface, ISecondInterface
+        {
+            //Явная реализация для интерфейса IFirstInterface
+            void IFirstInterface.Action()
+            {
+                Console.WriteLine("YouOtherClass IFirstInterface.Action()");
+            }
+
+            //Явная реализация для интерфейса ISecondInterface
+            void ISecondInterface.Action()
+            {
+                Console.WriteLine("YouOtherClass ISecondInterface.Action()");
             }
         }
     }
